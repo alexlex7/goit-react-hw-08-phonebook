@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Button, Modal, Form, Spinner } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Button, Modal, Form } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import contactsOperations from 'redux/contacts/contacts-operations';
 
 export default function EditContactForm({
