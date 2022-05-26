@@ -1,0 +1,13 @@
+.title {
+  text-align: center;
+}
+
+.homeWrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 56px);
+  align-items: center;
+  justify-content: center;
+
+  /* background: linear-gradient(rgba(255, 0, 0, 0.4), rgba(46, 0, 252, 0.4)); */
+}
