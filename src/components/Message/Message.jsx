@@ -1,5 +1,5 @@
 import { Alert } from 'react-bootstrap';
-
+import PropTypes from 'prop-types';
 export default function Message({ text }) {
   return (
     <Alert className="mx-auto" variant="primary" style={{ width: '480px' }}>
@@ -7,3 +7,7 @@ export default function Message({ text }) {
     </Alert>
   );
 }
+
+Message.propTypes = {
+  text: PropTypes.string.isRequired,
+};

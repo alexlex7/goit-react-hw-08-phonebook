@@ -6,6 +6,7 @@ const initialState = {
   token: null,
   isLoggedIn: false,
   isRefreshing: false,
+  error: null,
 };
 
 export const authSlice = createSlice({
@@ -13,21 +14,30 @@ export const authSlice = createSlice({
   initialState,
   extraReducers: {
     [authOperation.register.pending]: state => {
-      state.isRefreshing = true;
+      state.error = null;
     },
     [authOperation.register.fulfilled]: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLoggedIn = true;
-      state.isRefreshing = false;
     },
-    [authOperation.register.rejected]: state => {
-      state.isRefreshing = false;
+    [authOperation.register.rejected]: (state, action) => {
+      state.error = !action.payload.message
+        ? 'User registration failed'
+        : action.payload.message;
+    },
+    [authOperation.login.pending]: state => {
+      state.error = null;
     },
     [authOperation.login.fulfilled]: (state, action) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isLoggedIn = true;
+    },
+    [authOperation.login.rejected]: (state, action) => {
+      state.error = !action.payload.message
+        ? 'Authorization failed. Please check you email and password.'
+        : action.payload.message;
     },
     [authOperation.logOut.fulfilled]: state => {
       state.user = initialState.user;

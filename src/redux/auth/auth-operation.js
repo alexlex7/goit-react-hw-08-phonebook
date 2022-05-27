@@ -13,35 +13,44 @@ const token = {
   },
 };
 
-const register = createAsyncThunk('auth/register', async credentials => {
-  try {
-    const { data } = await axios.post('/users/signup', credentials);
-    token.set(data.token);
-    return data;
-  } catch (error) {
-    console.log(error.message);
+const register = createAsyncThunk(
+  'auth/register',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post('/users/signup', credentials);
+      token.set(data.token);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
-});
+);
 
-const login = createAsyncThunk('auth/login', async credentials => {
-  try {
-    const { data } = await axios.post('/users/login', credentials);
-    token.set(data.token);
-    return data;
-  } catch (error) {
-    console.log(error.message);
+const login = createAsyncThunk(
+  'auth/login',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const response = await axios.post('/users/login', credentials);
+      token.set(response.data.token);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
-});
+);
 
-const logOut = createAsyncThunk('auth/logout', async (_, { dispatch }) => {
-  try {
-    await axios.post('/users/logout');
-    token.unset();
-    dispatch(resetContacts());
-  } catch (error) {
-    console.log(error.message);
+const logOut = createAsyncThunk(
+  'auth/logout',
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      await axios.post('/users/logout');
+      token.unset();
+      dispatch(resetContacts());
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
-});
+);
 
 const getCurrentUser = createAsyncThunk(
   'auth/refreshUser',
@@ -52,7 +61,9 @@ const getCurrentUser = createAsyncThunk(
     try {
       const { data } = await axios.get('/users/current');
       return data;
-    } catch (error) {}
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 

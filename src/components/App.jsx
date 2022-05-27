@@ -6,7 +6,8 @@ import authOperations from 'redux/auth/auth-operation';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import Loader from './Loader/Loader';
-
+import { ToastContainer, toast } from 'react-toastify';
+import NotFoundPage from 'views/NotFoundPage';
 const HomePage = lazy(() =>
   import('../views/HomePage.jsx' /* webpackChunkName: "home-page" */)
 );
@@ -26,15 +27,21 @@ const RegisterPage = lazy(() =>
 export const App = () => {
   const dispatch = useDispatch();
   const isRefreshing = useSelector(state => state.auth.isRefreshing);
-  console.log(isRefreshing);
+  const error = useSelector(state => state.auth.error);
   useEffect(() => {
     dispatch(authOperations.getCurrentUser());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (error) {
+      toast(error);
+    }
+  }, [error]);
   return (
     !isRefreshing && (
       <>
         <Navigation />
+        <ToastContainer autoClose={5000} />
 
         <Routes>
           <Route
@@ -78,6 +85,8 @@ export const App = () => {
               </PrivateRoute>
             }
           />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </>
     )
